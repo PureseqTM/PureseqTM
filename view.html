@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="site_media/jquery.min.js"></script>
+</head>
+
+<head>
+    <title>Pureseqtm prediction</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+<h2>Phobius prediction</h2>
+<hr/>
+<h4>Prediction of UNNAMED</h4>
+<pre id="text_show_pred">
+</pre>
+<hr>
+<img src="" id="pureseqtm_img" alt="Posterior label probability plot"/>
+<p><font size="-1"><a id="click_all_file">Click</a>.to download all files.</font>
+<hr>
+
+
+</body>
+</html>
+<script>
+    $(function () {
+
+        function GetQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+
+        pathid = GetQueryString('id')
+        pathname = GetQueryString('name')
+
+        Front_Url = 'http://www.predmp.com/pureseqtm_front/'
+        Back_Url = 'http://18.209.146.171:8081'
+
+        $('#pureseqtm_img').attr('src', Back_Url + '/site_media/data/' + pathid + '/' + pathname + '.png')
+        $('#click_all_file').attr('href', Back_Url + '/site_media/data/' + pathid + '/' + pathname + '_all_in_one.zip')
+        $("#text_show_pred").html('<iframe src="'+Back_Url + '/site_media/data/' + pathid + '/' + pathname + '.gff"/>');
+
+    })
+
+
+</script>
+
+</html>

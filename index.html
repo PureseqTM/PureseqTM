@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="site_media/jquery.min.js"></script>
+    <!-- CSS goes in the document HEAD or added to your external stylesheet -->
+<style type="text/css">
+table.gridtable {
+font-family: verdana,arial,sans-serif;
+font-size:11px;
+color:#333333;
+border-width: 1px;
+border-color: #666666;
+border-collapse: collapse;
+}
+table.gridtable th {
+border-width: 1px;
+padding: 8px;
+border-style: solid;
+border-color: #666666;
+background-color: #dedede;
+}
+table.gridtable td {
+border-width: 1px;
+padding: 8px;
+border-style: solid;
+border-color: #666666;
+background-color: #ffffff;
+}
+</style>
+</head>
+<body style="color: rgb(0, 0, 0); font-family: helvetica,arial,sans-serif;" link="#0000ff" vlink="#901190">
+
+<h1>Normal prediction</h1>
+<div>
+    <p>Paste your protein sequence here in Fasta format:</p>
+    <textarea name="protseq" id="protseq" rows="6" cols="80"></textarea><br>
+    <b style="font-family: helvetica,arial,sans-serif;">Or:</b><span style="font-family: helvetica,arial,sans-serif;"> Select the sequence
+file you wish to use </span><input style="font-family: helvetica,arial,sans-serif;" type="file" name="protfile"
+                                   id="protfile" size="15" accept=".fasta"/><br><br><br>
+    <input type="button" id="form_submit" value="Submit">
+</div>
+<br><br>
+<table id="table_post_res" class="gridtable">
+
+</table>
+</body>
+
+<script>
+    $(function () {
+        // Front_Url = 'http://www.predmp.com/pureseqtm_front/'
+        Front_Url = '/'
+        Back_Url = 'http://18.209.146.171:8081'
+
+
+        $('#form_submit').click(function () {
+            var selectedFile = document.getElementById("protfile").files[0];
+            if (selectedFile == undefined) {
+                postSubmit($('#protseq').val())
+            } else {
+                var reader = new FileReader();//这是核心！！读取操作都是由它完成的
+                reader.readAsText(selectedFile);
+                reader.onloadend = function (oFREvent) {//读取完毕从中取值
+                    postSubmit(oFREvent.target.result)
+                }
+            }
+        })
+
+
+        function postSubmit(text) {
+
+            if (text == '') {
+                alert('Please input the data!')
+            } else {
+                $('#table_post_res').append("<img src=\"site_media/load.gif\" alt=\"loading\" style='width: 300px' id=\"post_load_gif\">")
+                $.ajax({
+                    url: Back_Url + '/pureseqtm/submit/',
+                    type: 'post',
+                    data: {
+                        'postFasta': text
+                    },
+                    dataType: 'json',              //数据返回类型，可以是xml、json等
+                    success: function (data) {      //成功，回调函数
+                        
+                        if (data.status == 0) {
+                            alert(data.detail)
+                        } else {
+                            
+                            $('#table_post_res').empty()
+                            $('#table_post_res').append('<tr><th>Order</th><th>Sequence</th><th>Download</th></tr>')
+                            $.each(data.detail, function (i, val) {
+                                str = '<tr><td>' + (i + 1) + '</td><td>'
+                                hreDown = Back_Url + '/site_media/data/' + val[2] + '/' + val[0] + '_all_in_one.zip'
+                                hreView = Front_Url + 'view.html?id=' + val[2] + '&name=' + val[0]
+                                str += '<a href="' + hreView + '">' + val[0] + '</a>' + '</td><td>' + '<img src="site_media/download.png" onclick="window.open(hreDown,\'_blank\')" alt=\"download\" name=\"post_download_png\" style=\"width: 50px;\">' + '</td></tr>'
+                                $('#table_post_res').append(str)
+                            });
+
+                        }
+
+                    }
+                })
+            }
+        }
+
+
+    })
+
+
+</script>
+
+</html>
