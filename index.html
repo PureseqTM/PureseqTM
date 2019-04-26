@@ -65,9 +65,9 @@ file you wish to use </span><input style="font-family: helvetica,arial,sans-seri
             if (selectedFile == undefined) {
                 postSubmit($('#protseq').val())
             } else {
-                var reader = new FileReader();//这是核心！！读取操作都是由它完成的
+                var reader = new FileReader();//core function for I/O operation
                 reader.readAsText(selectedFile);
-                reader.onloadend = function (oFREvent) {//读取完毕从中取值
+                reader.onloadend = function (oFREvent) {//extract values from the I/O return
                     postSubmit(oFREvent.target.result)
                 }
             }
@@ -86,8 +86,8 @@ file you wish to use </span><input style="font-family: helvetica,arial,sans-seri
                     data: {
                         'postFasta': text
                     },
-                    dataType: 'json',              //数据返回类型，可以是xml、json等
-                    success: function (data) {      //成功，回调函数
+                    dataType: 'json',               //return type could be xml or json
+                    success: function (data) {      //success, return function
                         
                         if (data.status == 0) {
                             alert(data.detail)
