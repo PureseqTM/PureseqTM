@@ -1,10 +1,15 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <title></title>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="site_media/jquery.min.js"></script>
+    <script type="text/javascript" src="site_media/bootstrap.min.js"></script>
+    <!-- CSS goes in the document HEAD or added to your external stylesheet -->
+    <link href="site_media/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <head>
@@ -12,18 +17,69 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 </head>
 <body>
-<h2>PureseqTM prediction result</h2>
-<hr/>
-<pre id="text_show_pred">
-</pre>
-<hr>
-<img src="" id="pureseqtm_img" alt="Posterior label probability plot"/>
-<p><font size="-1"><a id="click_all_file">Click</a> to download detailed prediction results.</font>
-<hr>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://pureseqtm.predmp.com/">PureseqTM</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="http://pureseqtm.predmp.com/">Form Input</a></li>
+                <li><a href="https://github.com/PureseqTM/pureseqTM_package">Source code</a></li>
+                <li><a href="https://github.com/PureseqTM/pureseqTM_Database">Train test</a></li>
+                <li><a href="https://github.com/PureseqTM/PureseqTM">View on GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+
+
+<div class="container-fluid">
+    <div class="row" id="container-title">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 main">
+            <h2 class="page-header">PureseqTM prediction result </h2>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 main">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Output data</div>
+                <div class="panel-body">
+                    <pre id="text_show_pred"></pre>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Output image</h3>
+                </div>
+                <div class="panel-body">
+                    <img src="site_media/load.gif" alt="Posterior label probability plot" class="img-responsive"
+                         id="pureseqtm_img">
+                </div>
+            </div>
+            <p class="help-block">(<a id="click_all_file">Click</a> to download detailed prediction results.)</p>
+        </div>
+    </div>
+
+
+</div>
 
 
 </body>
-</html>
+
 <script>
     $(function () {
 
@@ -42,7 +98,7 @@
 
         $('#pureseqtm_img').attr('src', Back_Url + '/site_media/data/' + pathid + '/' + pathname + '.png')
         $('#click_all_file').attr('href', Back_Url + '/site_media/data/' + pathid + '/' + pathname + '_all_in_one.zip')
-        $("#text_show_pred").html('<iframe src="'+Back_Url + '/site_media/data/' + pathid + '/' + pathname + '.gff"/>');
+        $("#text_show_pred").html('<iframe src="' + Back_Url + '/site_media/data/' + pathid + '/' + pathname + '.gff"/>');
 
     })
 
