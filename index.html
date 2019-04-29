@@ -40,8 +40,6 @@
 <br>
 <hr>
 <div class="alert alert-danger alert-dismissible" style="display: none" role="alert" id="alert-tabler">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-    </button>
     <strong>Error: </strong><br>
     <div id="alert-tabel-text"></div>
 </div>
@@ -198,6 +196,8 @@
             if (text == '') {
                 $('#alert-tabel-text').text('Please input the data!')
                 $('#alert-tabler').show()
+                $('#container-wait').hide()
+                $('#container-input').show()
             } else {
                 $('#alert-tabler').hide()
                 $('#container-input').hide()
@@ -216,6 +216,8 @@
                         if (data.status == 0) {
                             $('#alert-tabel-text').text(data.detail)
                             $('#alert-tabler').show()
+                            $('#container-wait').hide()
+                            $('#container-input').show()
                         } else {
                             $('#container-wait').hide()
                             if (data.allzip != '') {
