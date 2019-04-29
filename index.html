@@ -1,67 +1,162 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <title></title>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="site_media/jquery.min.js"></script>
+    <script type="text/javascript" src="site_media/bootstrap.min.js"></script>
     <!-- CSS goes in the document HEAD or added to your external stylesheet -->
-<style type="text/css">
-table.gridtable {
-font-family: verdana,arial,sans-serif;
-font-size:11px;
-color:#333333;
-border-width: 1px;
-border-color: #666666;
-border-collapse: collapse;
-}
-table.gridtable th {
-border-width: 1px;
-padding: 8px;
-border-style: solid;
-border-color: #666666;
-background-color: #dedede;
-}
-table.gridtable td {
-border-width: 1px;
-padding: 8px;
-border-style: solid;
-border-color: #666666;
-background-color: #ffffff;
-}
-p.small {
-line-height: 0.7;
-}
-</style>
+    <link href="site_media/bootstrap.min.css" rel="stylesheet">
+
 </head>
-<body style="color: rgb(0, 0, 0); font-family: helvetica,arial,sans-serif;" link="#0000ff" vlink="#901190">
+<body>
 
-<h2>Transmembrane topology prediction by PureseqTM</h2>
-<div>
-    <p class="small">
-        Paste your protein sequence here in Fasta format:
-        <small>(up to 100 protein sequences) </small>
-    </p>
-    <textarea name="protseq" id="protseq" rows="6" cols="80"></textarea><br>
-    <b style="font-family: helvetica,arial,sans-serif;">Or:</b><span style="font-family: helvetica,arial,sans-serif;"> Select the sequence
-file you wish to use </span><input style="font-family: helvetica,arial,sans-serif;" type="file" name="protfile"
-                                   id="protfile" size="15" accept=".fasta"/><br><br><br>
-    <input type="button" id="form_submit" value="Submit">
-    <a href="https://github.com/PureseqTM/PureseqTM_Package" style="margin-left: 80px;" target="_blank">Source code</a>
-    <a href="https://github.com/PureseqTM/PureseqTM_Dataset" style="margin-left: 80px;" target="_blank">Train and test data</a>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://pureseqtm.predmp.com/">PureseqTM</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                li><a href="http://pureseqtm.predmp.com/">Form Input</a></li>
+                <li><a href="https://github.com/PureseqTM/pureseqTM_package">Source code</a></li>
+                <li><a href="https://github.com/PureseqTM/pureseqTM_Database">Train test</a></li>
+                <li><a href="https://github.com/PureseqTM/PureseqTM">View on GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+<hr>
+<div class="alert alert-danger alert-dismissible" style="display: none" role="alert" id="alert-tabler">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Error: </strong><br>
+    <div id="alert-tabel-text"></div>
 </div>
-<br><br>
-<table id="table_post_res" class="gridtable">
 
-</table>
+
+<div class="container-fluid">
+    <div class="row" id="container-title">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 main">
+            <h2 class="page-header">Transmembrane topology prediction by PureseqTM</h2>
+        </div>
+    </div>
+
+
+    <div class="row" id="container-input">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 main">
+            <h3 class="sub-header">Form</h3>
+            <div class="form-group">
+                <h4><label for="protseq">Seq input</label></h4>
+                <p class="help-block"> Paste your protein sequence here in Fasta format(up to 100 protein
+                    sequences).</p>
+                <textarea name="protseq" id="protseq" rows="6" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <h4><label for="protfile">File input</label></h4>
+                <p class="help-block">Or: Select the sequence file you wish to use.</p>
+                <input type="file" id="protfile" accept=".fasta">
+            </div>
+            <input type="button" id="form_submit" class="btn btn-primary" value="Submit"/>
+        </div>
+    </div>
+
+    <div id="container-reslist" style="display: none;">
+        <div class="row">
+            <div class="col-sm-10  col-md-8 col-md-offset-2 col-sm-offset-1">
+                <div class="col-md-3 col-sm-3">
+                    <h3 class="sub-header">Result List</h3>
+                </div>
+                <div class="col-md-2 col-sm-2" style="margin-top: 18px;">
+                    <input type="button" id="download-all-zip" style="display:none;" class="btn btn-primary " value="Download All">
+                </div>
+                <div class="pull-right">
+                    <nav aria-label="...">
+                        <ul class="pagination" id="list-need-to-append-nav">
+
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                <div class="row">
+                    <div >
+                        <table class="table table-responsive table-hover table-striped" id="table_post_res" style="word-break:break-all;">
+                            <thead>
+                            <tr>
+                                <th class="col-md-1 col-sm-1 col-xs-1">#</th>
+                                <th class="col-md-1 col-sm-1 col-xs-1">Name</th>
+                                <th class="col-md-4 col-sm-6 col-xs-8">Sequence</th>
+                                <th class="col-md-2 col-sm-2 col-xs-2">View/Download</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" id="container-wait" style="display: none">
+        <div class="col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-3 main">
+            <img src="site_media/load.gif" alt="loading" class="img-responsive" style="height: 400px"
+                 id="post_load_gif">
+        </div>
+    </div>
+</div>
+
+
 </body>
 
 <script>
+    function getFormStrNavLi(currentPage, pageSize, pageNum, dataNum) {
+        for(var i=1;i<=dataNum;i++) $('#table-res-tr-'+i).hide()
+        for(var i=(currentPage-1)*pageSize+1;i<=currentPage*pageSize && i<=dataNum;i++) $('#table-res-tr-'+i).show()
+        if (currentPage == 1){
+            $('#list-need-to-append-nav li:eq(0)').attr('class','disabled')
+            $('#list-need-to-append-nav li:eq(0)').click(function () {})
+        }else{
+            $('#list-need-to-append-nav li:eq(0)').attr('class','')
+            $('#list-need-to-append-nav li:eq(0)').click(function () { getFormStrNavLi(currentPage-1,pageSize,pageNum,dataNum)})
+        }
+        if(currentPage==pageNum){
+            $('#list-need-to-append-nav li:last').attr('class','disabled')
+            $('#list-need-to-append-nav li:last').click(function () {})
+        }else{
+            $('#list-need-to-append-nav li:last').attr('class','')
+            $('#list-need-to-append-nav li:last').click(function () { getFormStrNavLi(currentPage+1,pageSize,pageNum,dataNum)})
+        }
+        $('#list-need-to-append-nav  li').removeClass('active')
+        $('#list-need-to-append-nav  li:eq('+currentPage+')').addClass('active')
+    }
+
     $(function () {
+
         Front_Url = '/'
         Back_Url = 'http://18.209.146.171:8081'
 
-
+        $('#go_back').click(function () {
+            location.href=Front_Url
+        })
         $('#form_submit').click(function () {
             var selectedFile = document.getElementById("protfile").files[0];
             if (selectedFile == undefined) {
@@ -76,12 +171,39 @@ file you wish to use </span><input style="font-family: helvetica,arial,sans-seri
         })
 
 
+
+        function getFormatStrTr(id, name, seq, viewurl, downloadurl) {
+            str = "                            <tr  id=\"table-res-tr-"+id+"\">\n" +
+                "                                <td class=\"col-md-1 col-sm-1 col-xs-1\">" + id + "</td>\n" +
+                "                                <td class=\"col-md-1 col-sm-1 col-xs-1\">" + name + "</td>\n" +
+                "                                <td class=\"col-md-4 col-sm-6 col-xs-8\">\n" + seq +
+                "                                </td>\n" +
+                "                                <td class=\"col-md-2 col-sm-2 col-xs-2\">\n" +
+                "                                    <div class=\"col-md-1 col-sm-1 col-xs-1\">\n" +
+                "                                        <span class=\"input-group-btn col-md-1\">\n" +
+                "                                                <a class=\"btn btn-default\" href=\"" + viewurl + "\" target=\"_blank\" >Go!</a>\n" +
+                "                                        </span>\n" +
+                "                                    </div>\n" +
+                "                                    <div class=\"col-md-1 col-sm-1 col-xs-1 col-lg col-md-offset-2 col-sm-offset-2 col-xs-offset-2\">\n" +
+                "                                        <img src=\"site_media/download.png\" onclick=\"window.open('" + downloadurl + "','_blank')\" alt=\"download\" style=\"width: 45px;margin-top: -5px;margin-left: 10px\">\n" +
+                "                                    </div>\n" +
+                "                                </td>\n" +
+                "                            </tr>"
+            return str
+        }
+
+
         function postSubmit(text) {
 
             if (text == '') {
-                alert('Please input the data!')
+                $('#alert-tabel-text').text('Please input the data!')
+                $('#alert-tabler').show()
             } else {
-                $('#table_post_res').append("<img src=\"site_media/load.gif\" alt=\"loading\" style='width: 300px' id=\"post_load_gif\">")
+                $('#alert-tabler').hide()
+                $('#container-input').hide()
+                $('#container-wait').show()
+                $('#container-reslist').hide()
+                $('#go_back').show()
                 $.ajax({
                     url: Back_Url + '/pureseqtm/submit/',
                     type: 'post',
@@ -90,27 +212,48 @@ file you wish to use </span><input style="font-family: helvetica,arial,sans-seri
                     },
                     dataType: 'json',               //return type could be xml or json
                     success: function (data) {      //success, return function
-                        
+
                         if (data.status == 0) {
-                            alert(data.detail)
+                            $('#alert-tabel-text').text(data.detail)
+                            $('#alert-tabler').show()
                         } else {
-                            
-                            $('#table_post_res').empty()
-                            $('#table_post_res').append('<tr><th>Order</th><th>Sequence</th><th>Download</th></tr>')
+                            $('#container-wait').hide()
+                            if (data.allzip != '') {
+                                $('#download-all-zip').show()
+                                $('#download-all-zip').click(function () {
+                                    window.open(Back_Url + '/' + data.allzip, '_blank')
+                                })
+                            }
+                            $('#table_post_res tbody').empty()
+
+                            dataNum = data.detail.length   //data length
+                            currentPage = 1   // current page no
+                            pageSize = 10  // each page num
+                            pageNum = parseInt(dataNum / pageSize) + (dataNum % pageSize == 0 ? 0 : 1)   // page num
                             $.each(data.detail, function (i, val) {
-                                str = '<tr><td>' + (i + 1) + '</td><td>'
                                 hreDown = Back_Url + '/site_media/data/' + val[2] + '/' + val[0] + '_all_in_one.zip'
                                 hreView = Front_Url + 'view.html?id=' + val[2] + '&name=' + val[0]
-                                str += '<a href="' + hreView + '">' + val[0] + '</a>' + '</td><td>' + '<img src="site_media/download.png" onclick="window.open(hreDown,\'_blank\')" alt=\"download\" name=\"post_download_png\" style=\"width: 50px;\">' + '</td></tr>'
-                                $('#table_post_res').append(str)
+                                $('#table_post_res tbody').append(getFormatStrTr(i + 1, val[0], val[1], hreView, hreDown))
                             });
 
+                            $('#list-need-to-append-nav').empty()
+                            str=''
+                            str += "<li class=\"disabled\"><a href=\"#\"  onclick=\"getFormStrNavLi(" + (currentPage) + "," + pageSize + "," + pageNum + "," + dataNum + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span></a>\n"
+                            for(var i=1;i<=pageNum;i++) str += "<li><a href=\"#\" onclick=\"getFormStrNavLi(" + (i) + "," + pageSize + "," + pageNum + "," + dataNum + ")\">" + i + "</a></li>\n"
+                            str += "<li class=\"disabled\"><a href=\"#\"  onclick=\"getFormStrNavLi(" + (currentPage) + "," + pageSize + "," + pageNum + "," + dataNum + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span></a>\n"
+                            $('#list-need-to-append-nav').append(str)
+                            $('#container-reslist').show()
+                            getFormStrNavLi(currentPage, pageSize, pageNum, dataNum)
                         }
 
                     }
                 })
             }
         }
+
+
+
+
 
 
     })
