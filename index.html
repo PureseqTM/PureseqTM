@@ -237,7 +237,7 @@
                             pageSize = 10  // each page num
                             pageNum = parseInt(dataNum / pageSize) + (dataNum % pageSize == 0 ? 0 : 1)   // page num
                             $.each(data.detail, function (i, val) {
-                                hreDown = Back_Url + '/site_media/data/' + val[2] + '/' + val[0] + '_all_in_one.zip'
+                                hreDown = Back_Url + '/site_media/data/' + val[2] + '/' + val[2] + '_all_in_one.zip'
                                 hreView = Front_Url + 'view.html?id=' + val[2] + '&name=' + val[0]
                                 $('#table_post_res tbody').append(getFormatStrTr(i + 1, val[0], val[1], hreView, hreDown))
                             });
