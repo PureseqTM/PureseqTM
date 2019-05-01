@@ -55,7 +55,7 @@
 
     <div class="row" id="container-input">
         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 main">
-            <h3 class="sub-header">Form</h3>
+            <!--            <h3 class="sub-header">Form</h3>-->
             <div class="form-group">
                 <h4><label for="protseq">Seq input</label></h4>
                 <p class="help-block"> Paste your protein sequence here in Fasta format (up to 20 protein
@@ -65,7 +65,12 @@
             <div class="form-group">
                 <h4><label for="protfile">File input</label></h4>
                 <p class="help-block">Or: Select the sequence file you wish to use.</p>
-                <input type="file" id="protfile" accept=".fasta">
+                <input type="file" id="protfile" class="form-control" accept=".fasta">
+            </div>
+            <div class="form-group">
+                <h4><label for="protfile">Email Address(Optional)</label></h4>
+                <p class="help-block">We may send the result to you while it finished.</p>
+                <input type="email" class="form-control" id="emailpost">
             </div>
             <input type="button" id="form_submit" class="btn btn-primary" value="Submit"/>
         </div>
@@ -78,7 +83,8 @@
                     <h3 class="sub-header">Result List</h3>
                 </div>
                 <div class="col-md-2 col-sm-2" style="margin-top: 18px;">
-                    <input type="button" id="download-all-zip" style="display:none;" class="btn btn-primary " value="Download All">
+                    <input type="button" id="download-all-zip" style="display:none;" class="btn btn-primary "
+                           value="Download All">
                 </div>
                 <div class="pull-right">
                     <nav aria-label="...">
@@ -93,8 +99,9 @@
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
                 <div class="row">
-                    <div >
-                        <table class="table table-responsive table-hover table-striped" id="table_post_res" style="word-break:break-all;">
+                    <div>
+                        <table class="table table-responsive table-hover table-striped" id="table_post_res"
+                               style="word-break:break-all;">
                             <thead>
                             <tr>
                                 <th class="col-md-1 col-sm-1 col-xs-1">#</th>
@@ -127,24 +134,40 @@
 
 <script>
     function getFormStrNavLi(currentPage, pageSize, pageNum, dataNum) {
-        for(var i=1;i<=dataNum;i++) $('#table-res-tr-'+i).hide()
-        for(var i=(currentPage-1)*pageSize+1;i<=currentPage*pageSize && i<=dataNum;i++) $('#table-res-tr-'+i).show()
-        if (currentPage == 1){
-            $('#list-need-to-append-nav li:eq(0)').attr('class','disabled')
-            $('#list-need-to-append-nav li:eq(0)').click(function () {})
-        }else{
-            $('#list-need-to-append-nav li:eq(0)').attr('class','')
-            $('#list-need-to-append-nav li:eq(0)').click(function () { getFormStrNavLi(currentPage-1,pageSize,pageNum,dataNum)})
+        for (var i = 1; i <= dataNum; i++) $('#table-res-tr-' + i).hide()
+        for (var i = (currentPage - 1) * pageSize + 1; i <= currentPage * pageSize && i <= dataNum; i++) $('#table-res-tr-' + i).show()
+        if (currentPage == 1) {
+            $('#list-need-to-append-nav li:eq(0)').attr('class', 'disabled')
+            $('#list-need-to-append-nav li:eq(0)').click(function () {
+            })
+        } else {
+            $('#list-need-to-append-nav li:eq(0)').attr('class', '')
+            $('#list-need-to-append-nav li:eq(0)').click(function () {
+                getFormStrNavLi(currentPage - 1, pageSize, pageNum, dataNum)
+            })
         }
-        if(currentPage==pageNum){
-            $('#list-need-to-append-nav li:last').attr('class','disabled')
-            $('#list-need-to-append-nav li:last').click(function () {})
-        }else{
-            $('#list-need-to-append-nav li:last').attr('class','')
-            $('#list-need-to-append-nav li:last').click(function () { getFormStrNavLi(currentPage+1,pageSize,pageNum,dataNum)})
+        if (currentPage == pageNum) {
+            $('#list-need-to-append-nav li:last').attr('class', 'disabled')
+            $('#list-need-to-append-nav li:last').click(function () {
+            })
+        } else {
+            $('#list-need-to-append-nav li:last').attr('class', '')
+            $('#list-need-to-append-nav li:last').click(function () {
+                getFormStrNavLi(currentPage + 1, pageSize, pageNum, dataNum)
+            })
         }
         $('#list-need-to-append-nav  li').removeClass('active')
-        $('#list-need-to-append-nav  li:eq('+currentPage+')').addClass('active')
+        $('#list-need-to-append-nav  li:eq(' + currentPage + ')').addClass('active')
+    }
+
+
+    function testEmail(str) {
+        var reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+        if (reg.test(str)) {
+            return true
+        } else {
+            return false
+        }
     }
 
     $(function () {
@@ -157,7 +180,7 @@
                 'QAQITGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPF\n')
         })
         $('#go_back').click(function () {
-            location.href=Front_Url
+            location.href = Front_Url
         })
         $('#form_submit').click(function () {
             var selectedFile = document.getElementById("protfile").files[0];
@@ -173,9 +196,8 @@
         })
 
 
-
         function getFormatStrTr(id, name, seq, viewurl, downloadurl) {
-            str = "                            <tr  id=\"table-res-tr-"+id+"\">\n" +
+            str = "                            <tr  id=\"table-res-tr-" + id + "\">\n" +
                 "                                <td class=\"col-md-1 col-sm-1 col-xs-1\">" + id + "</td>\n" +
                 "                                <td class=\"col-md-1 col-sm-1 col-xs-1\">" + name + "</td>\n" +
                 "                                <td class=\"col-md-4 col-sm-6 col-xs-8\">\n" + seq +
@@ -196,9 +218,14 @@
 
 
         function postSubmit(text) {
-
+            var email = $('#emailpost').val().trim()
             if (text == '') {
                 $('#alert-tabel-text').text('Please input the data!')
+                $('#alert-tabler').show()
+                $('#container-wait').hide()
+                $('#container-input').show()
+            } else if (email != '' && testEmail(email) == false) {
+                $('#alert-tabel-text').text('Error email!')
                 $('#alert-tabler').show()
                 $('#container-wait').hide()
                 $('#container-input').show()
@@ -212,7 +239,8 @@
                     url: Back_Url + '/pureseqtm/submit/',
                     type: 'post',
                     data: {
-                        'postFasta': text
+                        'postFasta': text,
+                        'email':email
                     },
                     dataType: 'json',               //return type could be xml or json
                     success: function (data) {      //success, return function
@@ -243,9 +271,9 @@
                             });
 
                             $('#list-need-to-append-nav').empty()
-                            str=''
+                            str = ''
                             str += "<li class=\"disabled\"><a href=\"#\"  onclick=\"getFormStrNavLi(" + (currentPage) + "," + pageSize + "," + pageNum + "," + dataNum + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span></a>\n"
-                            for(var i=1;i<=pageNum;i++) str += "<li><a href=\"#\" onclick=\"getFormStrNavLi(" + (i) + "," + pageSize + "," + pageNum + "," + dataNum + ")\">" + i + "</a></li>\n"
+                            for (var i = 1; i <= pageNum; i++) str += "<li><a href=\"#\" onclick=\"getFormStrNavLi(" + (i) + "," + pageSize + "," + pageNum + "," + dataNum + ")\">" + i + "</a></li>\n"
                             str += "<li class=\"disabled\"><a href=\"#\"  onclick=\"getFormStrNavLi(" + (currentPage) + "," + pageSize + "," + pageNum + "," + dataNum + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span></a>\n"
                             $('#list-need-to-append-nav').append(str)
                             $('#container-reslist').show()
@@ -256,10 +284,6 @@
                 })
             }
         }
-
-
-
-
 
 
     })
