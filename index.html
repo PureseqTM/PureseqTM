@@ -59,7 +59,7 @@
             <div class="form-group">
                 <h4><label for="protseq">Seq input</label></h4>
                 <p class="help-block"> Paste your protein sequence here in Fasta format (up to 20 protein
-                    sequences).</p>
+                    sequences). [ <a href="#" id="input-example">example</a> ]</p>
                 <textarea name="protseq" id="protseq" rows="6" class="form-control"></textarea>
             </div>
             <div class="form-group">
@@ -152,6 +152,10 @@
         Front_Url = '/'
         Back_Url = 'http://18.209.146.171:8081'
 
+        $('#input-example').click(function () {
+            $('#protseq').val('>1bhaA\n' +
+                'QAQITGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPF\n')
+        })
         $('#go_back').click(function () {
             location.href=Front_Url
         })
